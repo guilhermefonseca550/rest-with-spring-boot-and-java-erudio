@@ -1,11 +1,22 @@
-package br.com.erudio.data.dto;
+package br.com.erudio.data.dto.v1;
 
 import br.com.erudio.model.Person;
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.fasterxml.jackson.annotation.JsonProperty;
+//import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import br.com.erudio.serializer.GenderSerializer;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
-import java.io.Serializable;import java.util.Objects;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Objects;
 
-
+//@JsonPropertyOrder({"id", "address", "first_name", "last_name", "gender"})
+@JsonFilter("PersonFilter")
 public class PersonDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -14,19 +25,51 @@ public class PersonDTO implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //@JsonProperty("first_name")
     @Column(name = "first_name", nullable = false, length = 80)
     private String firstName;
 
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private String phoneNumber;
+
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date birthDate;
 
     @Column(name = "address", nullable = false, length = 100)
     private String address;
 
-    @Column(nullable = false, length = 6)
+    //@JsonIgnore
+    @JsonSerialize(using = GenderSerializer.class)
+    @Column(name = "gender", nullable = false, length = 6)
     private String gender;
 
+
+    private String sensitiveData;
+
     public PersonDTO() {
+    }
+
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getFirstName() {
@@ -69,14 +112,23 @@ public class PersonDTO implements Serializable {
         this.gender = gender;
     }
 
+    public String getSensitiveData() {
+        return sensitiveData;
+    }
+
+    public void setSensitiveData(String sensitiveData) {
+        this.sensitiveData = sensitiveData;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Person person)) return false;
-        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender());
+        if (o == null || getClass() != o.getClass()) return false;
+        PersonDTO personDTO = (PersonDTO) o;
+        return Objects.equals(getId(), personDTO.getId()) && Objects.equals(getFirstName(), personDTO.getFirstName()) && Objects.equals(getLastName(), personDTO.getLastName()) && Objects.equals(getPhoneNumber(), personDTO.getPhoneNumber()) && Objects.equals(getBirthDate(), personDTO.getBirthDate()) && Objects.equals(getAddress(), personDTO.getAddress()) && Objects.equals(getGender(), personDTO.getGender()) && Objects.equals(getSensitiveData(), personDTO.getSensitiveData());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender());
+        return Objects.hash(getId(), getFirstName(), getLastName(), getPhoneNumber(), getBirthDate(), getAddress(), getGender(), getSensitiveData());
     }
 }

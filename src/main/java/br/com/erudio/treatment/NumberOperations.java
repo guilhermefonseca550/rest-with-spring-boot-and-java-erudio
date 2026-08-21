@@ -1,6 +1,6 @@
 package br.com.erudio.treatment;
 
-import br.com.erudio.exception.UnsupportedMathOperationException;
+import br.com.erudio.exception.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -12,7 +12,7 @@ public class NumberOperations extends NumberTreatment {
     public Double sum(@PathVariable String numberOne,
                       @PathVariable String numberTwo)
             throws IllegalArgumentException {
-        if(!NumberTreatment.isNumeric(numberOne) || !NumberTreatment.isNumeric(numberTwo)) throw new UnsupportedMathOperationException(
+        if(!NumberTreatment.isNumeric(numberOne) || !NumberTreatment.isNumeric(numberTwo)) throw new ResourceNotFoundException(
                 "Please set a numeric value");
         return convertToDouble(numberOne) + convertToDouble(numberTwo);
     }
@@ -20,7 +20,7 @@ public class NumberOperations extends NumberTreatment {
     public Double subtraction(@PathVariable String numberOne,
                               @PathVariable String numberTwo)
             throws IllegalArgumentException {
-        if(!isNumeric(numberOne) || !isNumeric(numberTwo)) throw new UnsupportedMathOperationException("Please set a numeric value");
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)) throw new ResourceNotFoundException("Please set a numeric value");
         return convertToDouble(numberOne) - convertToDouble(numberTwo);
     }
 

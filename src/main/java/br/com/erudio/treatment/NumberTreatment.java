@@ -1,11 +1,11 @@
 package br.com.erudio.treatment;
 
-import br.com.erudio.exception.UnsupportedMathOperationException;
+import br.com.erudio.exception.ResourceNotFoundException;
 
 public class NumberTreatment {
     public static Double convertToDouble(String strNumber) throws IllegalArgumentException {
         if(strNumber == null || strNumber.isEmpty()) {
-            throw new UnsupportedMathOperationException("Please set a numeric value");
+            throw new ResourceNotFoundException("Please set a numeric value");
         }
         String number = strNumber.replace(",", ".");
         return Double.parseDouble(number);
